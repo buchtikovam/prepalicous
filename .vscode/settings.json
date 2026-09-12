@@ -1,5 +1,30 @@
 {
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit",
+		"source.addMissingImports": "always"
+	},
+
+	"files.autoSave": "afterDelay",
+	"files.autoSaveDelay": 2000,
+
+	"js/ts.suggest.autoImports": true,
+
+	"npm.autoDetect": "on",
+
+	"svelte.enable-ts-plugin": true,
+	"[svelte]": {
+		"editor.defaultFormatter": "svelte.svelte-vscode"
+	},
+
 	"files.associations": {
 		"*.css": "tailwindcss"
+	},
+
+	"git.autofetch": true,
+
+	"github.copilot.enable": {
+		"*": false
 	}
 }
