@@ -63,7 +63,7 @@
 							</Field>
 
 							<FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
-								Or continue with
+								or continue with
 							</FieldSeparator>
 
 							{#if !codeRequested}
