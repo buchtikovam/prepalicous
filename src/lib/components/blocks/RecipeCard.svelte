@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+
 	import { Badge } from '$ui/badge/index.js';
 	import { Button } from '$ui/button/index.js';
 	import * as Card from '$ui/card/index.js';
@@ -6,7 +9,7 @@
 	import Heart from '$lucide/heart.svelte';
 </script>
 
-<Card.Root class="relative max-w-sm pt-0 [--card-spacing:--spacing(5)]">
+<Card.Root onclick={() => goto(resolve('/app/recipes/1'))} class="relative max-w-sm pt-0 [--card-spacing:--spacing(5)]">
 	<div class="absolute inset-0 z-30 aspect-video"></div>
 	<img
 		src="https://cdn.vilgain.com/image/recipe-content/content-desktop-retina/webp/7aee2aa6-ca92-4116-8521-530468bd96c6?v=1769065409"
@@ -23,7 +26,7 @@
 			<Badge variant="secondary">Featured</Badge>
 		</Card.Action>
 		<Card.Title>Bulguretto with chicken and tomatoes</Card.Title>
-		<!-- <Card.Description>A practical talk on component APIs, accessibility, and shipping faster.</Card.Description> -->
+		<Card.Description>A practical talk on component APIs, accessibility, and shipping faster.</Card.Description>
 	</Card.Header>
 
 	<!-- <Card.Footer>

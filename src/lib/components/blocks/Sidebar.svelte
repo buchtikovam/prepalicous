@@ -10,33 +10,35 @@
 	import Refrigerator from '$lucide/refrigerator.svelte';
 	import ShoppingCart from '$lucide/shopping-cart.svelte';
 
-	const items = [
+	import { i18n } from '$lib/i18n/index.svelte';
+
+	const items = $derived([
 		{
-			title: 'Meal plan',
+			title: i18n.t.sidebar.mealPlan,
 			url: resolve('/app/dashboard'),
 			icon: NotebookPen
 		},
 		{
-			title: 'Recipes',
+			title: i18n.t.sidebar.recipes,
 			url: resolve('/app/recipes'),
 			icon: CookingPot
 		},
 		{
-			title: 'Macro tracker',
+			title: i18n.t.sidebar.macroTracker,
 			url: resolve('/app/macros'),
 			icon: ChartPie
 		},
 		{
-			title: 'Pantry',
+			title: i18n.t.sidebar.pantry,
 			url: resolve('/app/pantry'),
 			icon: Refrigerator
 		},
 		{
-			title: 'Shopping list',
+			title: i18n.t.sidebar.shopping,
 			url: resolve('/app/shopping'),
 			icon: ShoppingCart
 		}
-	];
+	]);
 </script>
 
 <!-- TODO: recent recipes (sidebar-10) -->
@@ -48,15 +50,15 @@
 
 	<Sidebar.Content>
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Application</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>{i18n.t.sidebar.application}</Sidebar.GroupLabel>
 			<Sidebar.GroupContent>
 				<Sidebar.Menu>
-					{#each items as item (item.title)}
+					{#each items as item (item.url)}
 						<Sidebar.MenuItem>
 							<Sidebar.MenuButton>
 								{#snippet child({ props })}
 									<a href={item.url} {...props}>
-										<!-- <item.icon /> -->
+										<item.icon />
 										<span>{item.title}</span>
 									</a>
 								{/snippet}
@@ -68,7 +70,7 @@
 		</Sidebar.Group>
 
 		<Sidebar.Group>
-			<Sidebar.GroupLabel>Recent</Sidebar.GroupLabel>
+			<Sidebar.GroupLabel>{i18n.t.sidebar.recent}</Sidebar.GroupLabel>
 		</Sidebar.Group>
 	</Sidebar.Content>
 	<Sidebar.Footer />

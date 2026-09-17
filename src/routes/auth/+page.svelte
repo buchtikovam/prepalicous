@@ -1,94 +1,190 @@
-<script>
-	import { ID } from 'appwrite';
+<script lang="ts">
+	import { AppwriteException, ID } from 'appwrite';
+
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	import { account } from '$services/appwrite';
 
 	import AppHandle from '$ui/AppHandle.svelte';
 	import { Button } from '$ui/button';
 	import * as Card from '$ui/card';
-	import { FieldGroup, Field, FieldSeparator, FieldLabel, FieldDescription } from '$ui/field';
+	import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldSeparator } from '$ui/field';
 	import { Input } from '$ui/input';
 
 	import AppleIcon from '$icons/AppleIcon.svelte';
 	import GoogleIcon from '$icons/GoogleIcon.svelte';
 
-	let userId = $state();
+	import { i18n } from '$lib/i18n/index.svelte';
+
+	type Phase = 'email' | 'code';
+
+	let phase = $state<Phase>('email');
+	let userId = $state('');
 	let email = $state('');
-	let code = $state();
-	let sessionToken = $state();
-	let codeRequested = $state(false);
+	let code = $state('');
+	let securityPhrase = $state('');
+	let errorMessage = $state('');
+	let isSubmitting = $state(false);
+
+	function getErrorMessage(error: unknown): string {
+		return error instanceof AppwriteException ? error.message : i18n.t.auth.genericError;
+	}
+
+	async function requestCode(): Promise<void> {
+		errorMessage = '';
+		isSubmitting = true;
+
+		try {
+			const token = await account.createEmailToken({
+				userId: ID.unique(),
+				email: email.trim(),
+				phrase: true
+			});
+
+			// Existing accounts ignore the generated ID, so retain Appwrite's returned user ID.
+			userId = token.userId;
+			securityPhrase = token.phrase;
+			code = '';
+			phase = 'code';
+		} catch (error) {
+			errorMessage = getErrorMessage(error);
+		} finally {
+			isSubmitting = false;
+		}
+	}
+
+	async function verifyCode(): Promise<void> {
+		errorMessage = '';
+		isSubmitting = true;
+
+		try {
+			await account.createSession({
+				userId,
+				secret: code.trim()
+			});
+
+			await goto(resolve('/app/dashboard'));
+		} catch (error) {
+			errorMessage = getErrorMessage(error);
+		} finally {
+			isSubmitting = false;
+		}
+	}
+
+	function changeEmail(): void {
+		phase = 'email';
+		userId = '';
+		code = '';
+		securityPhrase = '';
+		errorMessage = '';
+	}
+
+	function handleSubmit(event: SubmitEvent): void {
+		event.preventDefault();
+		void (phase === 'email' ? requestCode() : verifyCode());
+	}
 </script>
 
-<div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+<div class="flex min-h-svh w-full flex-col items-center justify-center gap-6 p-6 md:p-10">
 	<div class="flex w-full max-w-sm flex-col gap-6">
 		<AppHandle class="justify-center" />
 
 		<div class="flex flex-col gap-6">
 			<Card.Root>
 				<Card.Header class="text-center">
-					<Card.Title class="text-xl">Welcome</Card.Title>
-					<Card.Description>Login with your Apple or Google account</Card.Description>
+					<Card.Title class="text-xl">{i18n.t.auth.title}</Card.Title>
+					<Card.Description>{i18n.t.auth.description}</Card.Description>
 				</Card.Header>
 
 				<Card.Content>
-					<form
-						onsubmit={async (e) => {
-							e.preventDefault();
-
-							if (!codeRequested) {
-								userId = ID.unique();
-
-								sessionToken = await account.createEmailToken({
-									userId,
-									email
-								});
-
-								if (sessionToken) {
-									codeRequested = true;
-								}
-							} else {
-								const session = await account.createSession({
-									userId,
-									secret: code
-								});
-
-								console.log(session);
-							}
-						}}
-					>
+					<form onsubmit={handleSubmit}>
 						<FieldGroup>
 							<Field>
-								<Button variant="outline" type="button"><AppleIcon />Continue with Apple</Button>
-								<Button variant="outline" type="button"><GoogleIcon />Continue with Google</Button>
+								<Button variant="outline" type="button">
+									<AppleIcon />
+									{i18n.t.auth.oauthButton('Apple')}
+								</Button>
+
+								<Button variant="outline" type="button">
+									<GoogleIcon />
+									{i18n.t.auth.oauthButton('Google')}
+								</Button>
 							</Field>
 
 							<FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
-								or continue with
+								{i18n.t.auth.separator}
 							</FieldSeparator>
 
-							{#if !codeRequested}
+							{#if phase === 'email'}
 								<Field>
-									<FieldLabel for="email">Email</FieldLabel>
+									<FieldLabel for="email">{i18n.t.auth.emailInputLbl}</FieldLabel>
 									<Input
 										id="email"
 										type="email"
 										placeholder="m@example.com"
+										autocomplete="email"
 										required
+										disabled={isSubmitting}
 										bind:value={email}
 									/>
 								</Field>
 							{:else}
 								<Field>
-									<FieldLabel for="code">Enter code</FieldLabel>
-									<Input id="code" type="text" placeholder="123456" required bind:value={code} />
+									<FieldLabel for="code">{i18n.t.auth.codeInputLbl}</FieldLabel>
+									<Input
+										id="code"
+										type="text"
+										inputmode="numeric"
+										autocomplete="one-time-code"
+										pattern="[0-9]{6}"
+										maxlength={6}
+										placeholder="123456"
+										required
+										disabled={isSubmitting}
+										bind:value={code}
+									/>
+									<FieldDescription>{i18n.t.auth.codeSent(email)}</FieldDescription>
+									{#if securityPhrase}
+										<FieldDescription>{i18n.t.auth.securityPhrase(securityPhrase)}</FieldDescription
+										>
+									{/if}
 								</Field>
 							{/if}
 
+							{#if errorMessage}
+								<FieldError>{errorMessage}</FieldError>
+							{/if}
+
 							<Field>
-								<Button type="submit">Login</Button>
-								<FieldDescription class="text-center">
-									Don't have an account? <a href="##">Sign up</a>
-								</FieldDescription>
+								<Button type="submit" disabled={isSubmitting}>
+									{phase === 'email' ? i18n.t.auth.requestCodeBtn : i18n.t.auth.verifyCodeBtn}
+								</Button>
+
+								{#if phase === 'code'}
+									<div class="flex justify-center gap-2">
+										<Button
+											type="button"
+											variant="ghost"
+											size="sm"
+											disabled={isSubmitting}
+											onclick={requestCode}
+										>
+											{i18n.t.auth.resendCodeBtn}
+										</Button>
+										<Button
+											type="button"
+											variant="ghost"
+											size="sm"
+											disabled={isSubmitting}
+											onclick={changeEmail}
+										>
+											{i18n.t.auth.changeEmailBtn}
+										</Button>
+									</div>
+								{/if}
+
+								<Button type="button" variant="outline">Continue as a guest</Button>
 							</Field>
 						</FieldGroup>
 					</form>
@@ -96,7 +192,7 @@
 			</Card.Root>
 
 			<FieldDescription class="px-6 text-center">
-				By clicking continue, you agree to our <a href="##">Terms of Service</a>
+				By logging in, you agree to our <a href="##">Terms of Service</a>
 				and <a href="##">Privacy Policy</a>.
 			</FieldDescription>
 		</div>

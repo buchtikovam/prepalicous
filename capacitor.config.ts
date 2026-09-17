@@ -9,6 +9,11 @@ const config: CapacitorConfig = {
 	android: {
 		minWebViewVersion: 111,
 		allowMixedContent: development ? true : undefined
+	},
+	plugins: {
+		SplashScreen: {
+			launchAutoHide: false
+		}
 	}
 	// backgroundColor: '#8E001C',
 	// server: {
@@ -16,11 +21,6 @@ const config: CapacitorConfig = {
 	//     // url: development ? 'https://prepalicous.dev' : undefined,
 	//     cleartext: development ? true : undefined
 	// },
-	// plugins: {
-	//     SplashScreen: {
-	//         launchAutoHide: false
-	//     }
-	// }
 };
 
 export default config;
