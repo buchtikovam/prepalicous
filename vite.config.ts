@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig } from 'vite';
+import { playwright } from '@vitest/browser-playwright';
+import { defineConfig } from 'vitest/config';
 
 import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
@@ -9,11 +10,10 @@ export default defineConfig({
 		tailwindcss(),
 		sveltekit({
 			compilerOptions: {
-				experimental: {
-					async: true
-				},
+				experimental: { async: true },
 				runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)
 			},
+
 			adapter: adapter({
 				pages: 'build',
 				assets: 'build',
@@ -21,9 +21,11 @@ export default defineConfig({
 				precompress: false,
 				strict: true
 			}),
+
 			typescript: {
 				config: (config) => {
 					config.include.push('capacitor.config.ts');
+
 					return config;
 				}
 			},
@@ -40,10 +42,35 @@ export default defineConfig({
 			}
 		})
 	],
-	optimizeDeps: {
-		entries: ['src/routes/**/*.{ts,svelte}']
-	}
-	// server: {
+	optimizeDeps: { entries: ['src/routes/**/*.{ts,svelte}'] },
+	test: {
+		expect: { requireAssertions: true },
+		projects: [
+			{
+				extends: './vite.config.ts',
+				test: {
+					name: 'client',
+					browser: {
+						enabled: true,
+						provider: playwright(),
+						instances: [{ browser: 'chromium', headless: true }]
+					},
+					include: ['src/**/*.svelte.{test,spec}.{js,ts}'],
+					exclude: ['src/lib/server/**']
+				}
+			},
+
+			{
+				extends: './vite.config.ts',
+				test: {
+					name: 'server',
+					environment: 'node',
+					include: ['src/**/*.{test,spec}.{js,ts}'],
+					exclude: ['src/**/*.svelte.{test,spec}.{js,ts}']
+				}
+			}
+		]
+	} // server: {
 	// 	allowedHosts: ['prepalicous.dev'],
 	// 	open: 'https://prepalicous.dev',
 	// 	host: 'localhost',
