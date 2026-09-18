@@ -98,7 +98,7 @@
 				</Card.Header>
 
 				<Card.Content>
-					<form onsubmit={handleSubmit}>
+					<form data-testid="auth-form" onsubmit={handleSubmit}>
 						<FieldGroup>
 							<Field>
 								<Button variant="outline" type="button">
