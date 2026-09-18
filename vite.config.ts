@@ -44,6 +44,9 @@ export default defineConfig({
 	],
 	optimizeDeps: { entries: ['src/routes/**/*.{ts,svelte}'] },
 	test: {
+		coverage: {
+			provider: 'v8'
+		},
 		expect: { requireAssertions: true },
 		projects: [
 			{
@@ -59,7 +62,6 @@ export default defineConfig({
 					exclude: ['src/lib/server/**']
 				}
 			},
-
 			{
 				extends: './vite.config.ts',
 				test: {
@@ -70,7 +72,8 @@ export default defineConfig({
 				}
 			}
 		]
-	} // server: {
+	}
+	// server: {
 	// 	allowedHosts: ['prepalicous.dev'],
 	// 	open: 'https://prepalicous.dev',
 	// 	host: 'localhost',

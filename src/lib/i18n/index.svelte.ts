@@ -2,8 +2,9 @@ import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
 
 import { createLocaleFormatters, type LocaleFormatters } from './formatters';
+import { isSupportedLocale, normalizeLocale } from './locale';
 import fallbackEn from './locales/en';
-import { SUPPORTED_LOCALES, type Dictionary, type SupportedLocale } from './types';
+import { type Dictionary, type SupportedLocale } from './types';
 
 const DEFAULT_LOCALE: SupportedLocale = 'en';
 const LOCALE_STORAGE_KEY = 'prepalicous.locale';
@@ -12,17 +13,6 @@ const localeLoaders = {
 	en: async () => fallbackEn,
 	cs: async () => (await import('./locales/cs')).default
 } satisfies Record<SupportedLocale, () => Promise<Dictionary>>;
-
-export function isSupportedLocale(locale: string): locale is SupportedLocale {
-	return (SUPPORTED_LOCALES as readonly string[]).includes(locale);
-}
-
-export function normalizeLocale(locale: string | undefined): SupportedLocale | undefined {
-	if (!locale) return undefined;
-
-	const languageCode = locale.split(/[-_]/)[0]?.toLowerCase();
-	return languageCode && isSupportedLocale(languageCode) ? languageCode : undefined;
-}
 
 function getStoredLocale(): SupportedLocale | undefined {
 	try {
