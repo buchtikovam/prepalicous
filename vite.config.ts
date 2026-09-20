@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
-import adapter from '@sveltejs/adapter-static';
+import adapterStatic from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
@@ -14,7 +14,7 @@ export default defineConfig({
 				runes: ({ filename }) => (filename.split(/[/\\]/).includes('node_modules') ? undefined : true)
 			},
 
-			adapter: adapter({
+			adapter: adapterStatic({
 				pages: 'build',
 				assets: 'build',
 				fallback: 'index.html',
@@ -25,10 +25,10 @@ export default defineConfig({
 			typescript: {
 				config: (config) => {
 					config.include.push('capacitor.config.ts');
-
 					return config;
 				}
 			},
+
 			alias: {
 				$assets: './src/lib/assets',
 				$packages: './src/lib/packages',
@@ -72,11 +72,10 @@ export default defineConfig({
 				}
 			}
 		]
+	},
+	server: {
+		strictPort: true,
+		host: '0.0.0.0',
+		port: 5173
 	}
-	// server: {
-	// 	allowedHosts: ['prepalicous.dev'],
-	// 	open: 'https://prepalicous.dev',
-	// 	host: 'localhost',
-	// 	port: 80
-	// },
 });

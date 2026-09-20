@@ -3,8 +3,6 @@
 	import { SplashScreen } from '@capacitor/splash-screen';
 	import { ModeWatcher, toggleMode } from 'mode-watcher';
 
-	import { PUBLIC_APP_NAME } from '$env/static/public';
-
 	import { onMount, tick } from 'svelte';
 
 	import favicon from '$assets/favicon.svg';
@@ -14,6 +12,7 @@
 	import Moon from '$lucide/moon.svelte';
 	import Sun from '$lucide/sun.svelte';
 
+	import { publicConfig } from '$lib/config/public';
 	import { i18n } from '$lib/i18n/index.svelte';
 	import { SUPPORTED_LOCALES, type SupportedLocale } from '$lib/i18n/types';
 
@@ -47,7 +46,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>{PUBLIC_APP_NAME}</title>
+	<title>{publicConfig.appName}</title>
 </svelte:head>
 
 <div

@@ -4,19 +4,18 @@
 	import AppHandle from '$ui/AppHandle.svelte';
 	import * as Sidebar from '$ui/sidebar';
 
-	import ChartPie from '$lucide/chart-pie.svelte';
 	import CookingPot from '$lucide/cooking-pot.svelte';
+	import LayoutDashboard from '$lucide/layout-dashboard.svelte';
 	import NotebookPen from '$lucide/notebook-pen.svelte';
-	import Refrigerator from '$lucide/refrigerator.svelte';
 	import ShoppingCart from '$lucide/shopping-cart.svelte';
 
 	import { i18n } from '$lib/i18n/index.svelte';
 
 	const items = $derived([
 		{
-			title: i18n.t.sidebar.mealPlan,
+			title: i18n.t.sidebar.dashboard,
 			url: resolve('/app/dashboard'),
-			icon: NotebookPen
+			icon: LayoutDashboard
 		},
 		{
 			title: i18n.t.sidebar.recipes,
@@ -24,14 +23,9 @@
 			icon: CookingPot
 		},
 		{
-			title: i18n.t.sidebar.macroTracker,
-			url: resolve('/app/macros'),
-			icon: ChartPie
-		},
-		{
-			title: i18n.t.sidebar.pantry,
-			url: resolve('/app/pantry'),
-			icon: Refrigerator
+			title: i18n.t.sidebar.mealPlanner,
+			url: resolve('/app/planner'),
+			icon: NotebookPen
 		},
 		{
 			title: i18n.t.sidebar.shopping,
@@ -40,8 +34,6 @@
 		}
 	]);
 </script>
-
-<!-- TODO: recent recipes (sidebar-10) -->
 
 <Sidebar.Root variant="floating">
 	<Sidebar.Header class="p-4 font-bold">

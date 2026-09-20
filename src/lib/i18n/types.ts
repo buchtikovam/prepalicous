@@ -5,10 +5,9 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 export interface Dictionary {
 	sidebar: {
 		application: string;
-		mealPlan: string;
+		dashboard: string;
+		mealPlanner: string;
 		recipes: string;
-		macroTracker: string;
-		pantry: string;
 		shopping: string;
 		recent: string;
 	};

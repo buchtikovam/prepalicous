@@ -2,7 +2,9 @@ import { Client, Account, TablesDB, Functions, Storage } from 'appwrite';
 
 export const client = new Client();
 
-client.setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('prepalicous');
+import { publicConfig } from '$lib/config/public';
+
+client.setEndpoint(publicConfig.appwriteEndpoint).setProject(publicConfig.appwriteProjectId);
 
 export { ID } from 'appwrite';
 

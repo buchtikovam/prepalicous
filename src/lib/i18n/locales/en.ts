@@ -3,10 +3,9 @@ import type { Dictionary } from '../types';
 const en = {
 	sidebar: {
 		application: 'Application',
-		mealPlan: 'Meal plan',
+		dashboard: 'Overview',
+		mealPlanner: 'Meal planner',
 		recipes: 'Recipes',
-		macroTracker: 'Macro tracker',
-		pantry: 'Pantry',
 		shopping: 'Shopping list',
 		recent: 'Recent'
 	},

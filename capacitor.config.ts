@@ -14,13 +14,12 @@ const config: CapacitorConfig = {
 		SplashScreen: {
 			launchAutoHide: false
 		}
+	},
+	server: {
+		url: development ? 'http://localhost:80' : undefined,
+		cleartext: development ? true : undefined,
+		errorPath: 'error.html'
 	}
-	// backgroundColor: '#8E001C',
-	// server: {
-	//     errorPath: 'error.html',
-	//     // url: development ? 'https://prepalicous.dev' : undefined,
-	//     cleartext: development ? true : undefined
-	// },
 };
 
 export default config;
