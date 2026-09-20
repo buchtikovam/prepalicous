@@ -1,10 +1,6 @@
 <script lang="ts">
-	import { AppwriteException, ID } from 'appwrite';
-
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-
-	import { account } from '$services/appwrite';
 
 	import AppHandle from '$ui/AppHandle.svelte';
 	import { Button } from '$ui/button';
@@ -15,6 +11,7 @@
 	import AppleIcon from '$icons/AppleIcon.svelte';
 	import GoogleIcon from '$icons/GoogleIcon.svelte';
 
+	import { authentication } from '$lib/features/identity/client';
 	import { i18n } from '$lib/i18n/index.svelte';
 
 	type Phase = 'email' | 'code';
@@ -27,8 +24,8 @@
 	let errorMessage = $state('');
 	let isSubmitting = $state(false);
 
-	function getErrorMessage(error: unknown): string {
-		return error instanceof AppwriteException ? error.message : i18n.t.auth.genericError;
+	function getErrorMessage(_error: unknown): string {
+		return i18n.t.auth.genericError;
 	}
 
 	async function requestCode(): Promise<void> {
@@ -36,15 +33,10 @@
 		isSubmitting = true;
 
 		try {
-			const token = await account.createEmailToken({
-				userId: ID.unique(),
-				email: email.trim(),
-				phrase: true
-			});
+			const challenge = await authentication.requestEmailCode({ email });
 
-			// Existing accounts ignore the generated ID, so retain Appwrite's returned user ID.
-			userId = token.userId;
-			securityPhrase = token.phrase;
+			userId = challenge.userId;
+			securityPhrase = challenge.securityPhrase ?? '';
 			code = '';
 			phase = 'code';
 		} catch (error) {
@@ -59,11 +51,7 @@
 		isSubmitting = true;
 
 		try {
-			await account.createSession({
-				userId,
-				secret: code.trim()
-			});
-
+			await authentication.verifyEmailCode({ userId, code });
 			await goto(resolve('/app/dashboard'));
 		} catch (error) {
 			errorMessage = getErrorMessage(error);

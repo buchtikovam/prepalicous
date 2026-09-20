@@ -12,9 +12,9 @@
 	import Moon from '$lucide/moon.svelte';
 	import Sun from '$lucide/sun.svelte';
 
-	import { publicConfig } from '$lib/config/public';
 	import { i18n } from '$lib/i18n/index.svelte';
 	import { SUPPORTED_LOCALES, type SupportedLocale } from '$lib/i18n/types';
+	import { publicConfig } from '$lib/shared/config/public';
 
 	import '../app.css';
 
@@ -54,7 +54,6 @@
 >
 	{@render children()}
 
-	<!-- TODO: temp -->
 	<div class="absolute top-4 right-4 flex items-center gap-2">
 		<label class="sr-only" for="app-language">{i18n.t.language.label}</label>
 		<select

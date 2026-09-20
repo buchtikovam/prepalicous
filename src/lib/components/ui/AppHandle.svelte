@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Carrot from '$lucide/carrot.svelte';
 
-	import { publicConfig } from '$lib/config/public';
+	import { publicConfig } from '$lib/shared/config/public';
 	import { cn } from '$lib/utils';
 
 	import Row from './layout/Row.svelte';
