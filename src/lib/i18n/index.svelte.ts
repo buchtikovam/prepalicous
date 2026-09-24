@@ -7,7 +7,7 @@ import fallbackEn from './locales/en';
 import { type Dictionary, type SupportedLocale } from './types';
 
 const DEFAULT_LOCALE: SupportedLocale = 'en';
-const LOCALE_STORAGE_KEY = 'prepalicous.locale';
+const LOCALE_STORAGE_KEY = 'prepalicious.locale';
 
 const localeLoaders = {
 	en: async () => fallbackEn,

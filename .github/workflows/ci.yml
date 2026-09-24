@@ -1,4 +1,4 @@
-name: 🦄 Prepalicous quality gate
+name: 🦄 Prepalicious quality gate
 
 on:
     pull_request:
@@ -14,7 +14,7 @@ jobs:
         runs-on: ubuntu-latest
         timeout-minutes: 45
         env:
-            PUBLIC_APP_NAME: Prepalicous CI
+            PUBLIC_APP_NAME: Prepalicious CI
             PUBLIC_APPWRITE_ENDPOINT: https://example.invalid/v1
             PUBLIC_APPWRITE_PROJECT_ID: ci-project
             PUBLIC_APPWRITE_DATABASE_ID: ci-database

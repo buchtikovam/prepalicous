@@ -3,8 +3,8 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const development = process.env.npm_lifecycle_event?.startsWith('development') ?? false;
 
 const config: CapacitorConfig = {
-	appId: 'app.prepalicous',
-	appName: 'prepalicous',
+	appId: 'app.prepalicious',
+	appName: 'prepalicious',
 	webDir: 'build',
 	android: {
 		minWebViewVersion: 111,

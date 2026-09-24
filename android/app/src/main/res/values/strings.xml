@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">prepalicous</string>
-    <string name="title_activity_main">prepalicous</string>
-    <string name="package_name">app.prepalicous</string>
-    <string name="custom_url_scheme">app.prepalicous</string>
+    <string name="app_name">prepalicious</string>
+    <string name="title_activity_main">prepalicious</string>
+    <string name="package_name">app.prepalicious</string>
+    <string name="custom_url_scheme">app.prepalicious</string>
 </resources>

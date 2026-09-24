@@ -1,4 +1,4 @@
-package app.prepalicous;
+package app.prepalicious;
 
 import com.getcapacitor.BridgeActivity;
 

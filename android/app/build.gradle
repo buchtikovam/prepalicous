@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "app.prepalicous"
+    namespace = "app.prepalicious"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "app.prepalicous"
+        applicationId "app.prepalicious"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
